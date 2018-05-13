@@ -197,7 +197,7 @@ exports.randomplay = (req, res, next) => {
 
 
 exports.randomcheck = (req, res, next) => {
-	/*
+	
     const answer = req.query.answer || '';
     const result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
     const score = req.session.resolved.length;
@@ -221,30 +221,5 @@ exports.randomcheck = (req, res, next) => {
         delete req.session.resolved;
         res.render('quizzes/random_result', {result, score, answer});
     }
-	*/
-	 try{
-    const {quiz, query} = req;
-    req.session.alreadyPlayed = req.session.alreadyPlayed || [];
 
-    const actual_answer = query.answer || "";
-    const right_answer = quiz.answer;
-
-    const result = actual_answer.toLowerCase().trim() === right_answer.toLowerCase().trim();
-
-    if (result){
-        if(req.session.alreadyPlayed.indexOf(req.quiz.id) === -1){ 
-            req.session.alreadyPlayed.push(req.quiz.id);
-        }
-    } 
-
-    const score = req.session.alreadyPlayed.length;
-
-    if(!result){
-        req.session.alreadyPlayed = [];
-    }
-
-    res.render('quizzes/random_result', {actual_answer, result, score});
-    } catch (error){
-        next(error);
-    }
 };
