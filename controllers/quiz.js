@@ -216,3 +216,4 @@ exports.randomcheck = (req, res, next) => {
         result,
         score
     });
+};
