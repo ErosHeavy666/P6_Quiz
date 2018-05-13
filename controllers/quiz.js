@@ -164,7 +164,7 @@ exports.randomplay = (req, res, next) => {
 
     Sequelize.Promise.resolve().then(() => {
 
-        const whereOpt = {"id": {[Sequelize.Op.notIn]:req.session.resolved}};
+        const whereOpt = {'id': {[Sequelize.Op.notIn]:req.session.resolved}};
 
         return models.quiz.count({where: whereOpt})
             .then(count => {
