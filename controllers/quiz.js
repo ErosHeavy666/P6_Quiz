@@ -200,11 +200,13 @@ exports.randomcheck = (req, res, next) => {
 
     const answer = req.query.answer || '';
     const result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+     const score = req.session.resolved.length;
+     
     if (result) {
         if (req.session.resolved.indexOf(req.quiz.id) === -1){
             req.session.resolved.push(req.quiz.id);
         }
-        const score = req.session.resolved.length;
+       
         models.quiz.count()
             .then( count => {
                 if (score > count){
