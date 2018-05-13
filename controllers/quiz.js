@@ -153,3 +153,66 @@ exports.check = (req, res, next) => {
         answer
     });
 };
+
+
+exports.randomplay = (req, res, next) => {
+
+    req.session.randomPlay = req.session.randomPlay || [];
+
+    const whereOpt = {id:{[Sequelize.Op.notIn]: req.session.randomPlay}}; //Ids que no estén en session.randomPlay
+
+    models.quiz.count({where:whereOpt})
+        .then(function(count) {
+            if(!count){  //todos los ids estan en session.randomPlay, ya se han jugado
+                const score = req.session.randomPlay.length;
+                req.session.randomPlay = []; //vaciamos para la siguiente vez comenzar el juego de 0.
+                res.render('quizzes/random_none',{
+                    score:score
+                });
+            }
+            return models.quiz.findAll({    //Buscamos un quizz aleatoriamente que no esté en session.Play
+                where: whereOpt,
+                offset: Math.floor(count*Math.random()),
+                limit: 1
+            })
+                .then(function(quizzes) {
+                    return quizzes[0];
+                });
+        })
+        .then(function(quiz) {                      //Este quizz lo pasamos junto a la puntuacion que llevamos a la vista random_play.ejs
+            //const score = req.session.randomPlay.length;
+            res.render('quizzes/random_play',{
+                quiz:quiz,
+                score:req.session.randomPlay.length
+            });
+        })
+        .catch(function(error) {
+            next(error);
+        });
+
+};
+
+exports.randomcheck = (req, res, next) => {
+
+    const {quiz, query} = req;
+
+    const answer = query.answer || "";
+    const result = answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim();
+
+    const score = req.session.randomPlay.length;
+
+    if(result) {
+        req.session.randomPlay.push(quiz.id);
+        req.session.score++;
+    }else{
+        req.session.randomPlay = [];
+    }
+
+
+
+    res.render('quizzes/random_result',{
+        answer,
+        quiz,
+        result,
+        score
+    });
