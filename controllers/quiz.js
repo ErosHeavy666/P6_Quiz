@@ -197,7 +197,7 @@ exports.randomplay = (req, res, next) => {
 
 
 exports.randomcheck = (req, res, next) => {
-
+	/*
     const answer = req.query.answer || '';
     const result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
     const score = req.session.resolved.length;
@@ -222,4 +222,36 @@ exports.randomcheck = (req, res, next) => {
         res.render('quizzes/random_result', {result, score, answer});
     }
 
+*/
+     const {
+        quiz,
+        query
+    } = req;
+    const answer = query.answer || "";
+    const result = answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim();
+
+    if (result) {
+        req.session.score++;
+        const score = req.session.score;
+        if (req.session.toBeResolved.length === 0) {
+            req.session.toBeResolved = undefined;
+            res.render("random_nomore", {
+                score: score
+            });
+        } else {
+            res.render("random_result", {
+                answer: answer,
+                result: result,
+                score: score
+            });
+        }
+    } else {
+        req.session.toBeResolved = undefined;
+        const score = req.session.score;
+        res.render("random_result", {
+            answer: answer,
+            result: result,
+            score: score
+        });
+    }
 };
