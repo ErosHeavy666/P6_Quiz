@@ -217,7 +217,7 @@ exports.randomcheck = (req, res, next) => {
                 }
             });
     } else {
-        const score = req.session.resolved.length;
+        let score = req.session.resolved.length;
         delete req.session.resolved;
         res.render('quizzes/random_result', {result, score, answer});
     }
