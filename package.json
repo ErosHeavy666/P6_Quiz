@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "heroku local:start",
     "super": "supervisor ./bin/www",
     "start_old": "node ./bin/www",
-    "migrate_local": "sequelize db:migrate --url  sqlite://C:/Users/eros_/OneDrive/Escritorio/P7_Quiz/quiz_2018/quizzes.sqlite",
-    "seed_local": "sequelize db:seed:all --url sqlite://C:/Users/eros_/OneDrive/Escritorio/P7_Quiz/quiz_2018/quizzes.sqlite",
+    "migrate_local": "sequelize db:migrate --url  sqlite://$(pwd)/quizzes.sqlite",
+    "seed_local": "sequelize db:seed:all --url sqlite://$(pwd)/quizzes.sqlite",
     "open_heroku": "heroku open",
     "migrate_heroku": "heroku run ./node_modules/.bin/sequelize db:migrate --url \\$DATABASE_URL",
     "seed_heroku": "heroku run ./node_modules/.bin/sequelize db:seed:all --url \\$DATABASE_URL",
@@ -32,7 +32,7 @@
     "method-override": "^2.3.10",
     "morgan": "~1.9.0",
     "pg": "7.4.0",
-    "sequelize": "^4.37.8",
+    "sequelize": "^4.37.5",
     "sequelize-cli": "^4.0.0",
     "serve-favicon": "~2.4.5",
     "supervisor": "^0.12.0"
