@@ -2,14 +2,16 @@
     Edit tip:
 </h1>
 
-<form method="post" action="/quizzes/<%= quiz.id %>?_method=PUT" >
+<form method="post" action="/quizzes/<%= quiz.id %>/tips/<%= tip.id%>?_method=PUT" >
+    <div class="wideRow">
+        <label for="text"  class="itemNarrow">Tip to edit:</label>
+        <input type="text" class="itemWide" id="text"
+                name="question" value="<%= tip.question %>"
+                placeholder="Tip" autocomplete="off"/>
+    </div>
 
-	<div class="wideRow">
-		<label for="preg" class="itemNarrow>Tip para editar</label>
-		<input type="text" class="itemWide" id="text" name="text" value="<%= tip.text %>" placeholder="Escribe..." autocomplete="off"/>
-	</div>
+    <br/>
+    <a href="/goback"><button type="button">Cancel</button></a>
 
-	<br/>
-	<a href="/goback><button type="button">Edit</button></a>
-	<input type="submit" value="Save">
+    <input type="submit" value="Save">
 </form>
