@@ -18,6 +18,23 @@ exports.load = (req, res, next, tipId) => {
 };
 
 
+//Practica 8
+
+exports.adminOrAuthorRequired = (req, res, next) => {
+
+    const isAdmin  = !!req.session.user.isAdmin;
+    const isAuthor = req.quiz.authorId === req.session.user.id;
+
+    if (isAdmin || isAuthor) {
+        next();
+    } else {
+        console.log('Prohibited operation: The logged in user is not the author of the quiz, nor an administrator.');
+        res.send(403);
+    }
+};
+
+
+
 // POST /quizzes/:quizId/tips
 exports.create = (req, res, next) => {
  
@@ -74,4 +91,35 @@ exports.destroy = (req, res, next) => {
     })
     .catch(error => next(error));
 };
+
+//Practica 8
+
+exports.edit = (req, res, next ) => {
+
+    const {tip, quiz } = req;
+    res.render('tips/edit', { tip, quiz});
+};
+
+exports.update = (req,res,next) => {
+    const{quiz, tip, body} = req;
+
+    tip.text = body.text;
+    tip.accepted = false;
+
+    tip.save ({ fields: ["text", "accepted"]})
+    .then(tip => {
+        req.flash('success', 'Tip accepted successfully.');
+        res.redirect('/goback'); 
+    })
+   .catch(Sequelize.ValidationError, error => {
+        req.flash('error', 'There are errors in the form:');
+        error.errors.forEach(({message}) => req.flash('error', message));
+        res.render('tips/edit',{tip,quiz});
+    })
+    .catch(error => {
+        req.flash('error', 'Error creating the new tip: ' + error.message);
+        next(error);
+    });
+
+}
 
